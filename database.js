@@ -8,7 +8,11 @@ const pool = mysql.createPool({
     database:"slutprojekt"
 });
 
-module.exports = {house, houses, house_create, house_delete, house_update};
+module.exports = {
+    house, houses, house_create, house_delete, house_update,
+    task, tasks, task_create, task_delete, task_update, 
+    worker, workers, worker_create, worker_delete, worker_update
+};
 
 async function houses(owner){
     const con = await pool.getConnection();
@@ -56,3 +60,100 @@ async function house_update(house, address){
     return result[0];
 }
 
+
+async function tasks(address){
+    const con = await pool.getConnection();
+
+    const sql = "select * from task where house=?";
+    const result = await con.query(sql,[address]);
+    console.log(result);
+    pool.releaseConnection(con);
+    return result[0];
+}
+async function task(id, address){
+    const con = await pool.getConnection();
+
+    const sql = "select * from task where id=? and house=?";
+    const result = await con.query(sql, [id, address]);
+    console.log(result);
+    pool.releaseConnection(con);
+    return result[0];
+}
+async function task_create(task, address){
+    const con = await pool.getConnection();
+
+    const sql = "INSERT INTO task (name, description, house) VALUES (?, ?, ?)";
+    const result = await con.query(sql, [task.name, task.desc, address]);
+    console.log(result);
+    pool.releaseConnection(con);
+    return result[0].insertId;
+}
+async function task_delete(id){
+    const con = await pool.getConnection();
+
+    const sql = "delete from task where id = ?";
+    const result = await con.query(sql, [id]);
+    console.log(result);
+    pool.releaseConnection(con);
+    return result[0];
+}
+async function task_update(task, id){
+    const con = await pool.getConnection();
+
+    const sql = "update task set name=?, description=? where id=?";
+    const result = await con.query(sql, [task.name, task.desc, id]);
+    console.log(result);
+    pool.releaseConnection(con);
+    return result[0];
+}
+
+
+
+
+
+
+async function workers(task_id){
+    const con = await pool.getConnection();
+
+    const sql = "select * from worker where task_id=?";
+    const result = await con.query(sql,[task_id]);
+    console.log(result);
+    pool.releaseConnection(con);
+    return result[0];
+}
+async function worker(email){
+    const con = await pool.getConnection();
+
+    const sql = "select * from worker where email=?";
+    const result = await con.query(sql, [email]);
+    console.log(result);
+    pool.releaseConnection(con);
+    return result[0];
+}
+async function worker_create(worker, task_id){
+    const con = await pool.getConnection();
+
+    const sql = "INSERT INTO worker (email, password, task_id) VALUES (?, ?, ?)";
+    const result = await con.query(sql, [worker.email, worker.password, task_id]);
+    console.log(result);
+    pool.releaseConnection(con);
+    return result[0].insertId;
+}
+async function worker_delete(email){
+    const con = await pool.getConnection();
+
+    const sql = "delete from worker where email = ?";
+    const result = await con.query(sql, [email]);
+    console.log(result);
+    pool.releaseConnection(con);
+    return result[0];
+}
+async function worker_update(worker, email){
+    const con = await pool.getConnection();
+
+    const sql = "update task set name=?, password=? where email=?";
+    const result = await con.query(sql, [worker.email, worker.password, email]);
+    console.log(result);
+    pool.releaseConnection(con);
+    return result[0];
+}
