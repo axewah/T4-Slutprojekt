@@ -31,7 +31,7 @@ async function house(address, owner){
 async function house_create(house, owner){
     const con = await pool.getConnection();
 
-    const sql = "INSERT INTO house (address, owner, room, type, `square meters`) VALUES (?, ?, ?, ?, ?)";
+    const sql = "INSERT INTO house (address, owner, room, type, square_meters) VALUES (?, ?, ?, ?, ?)";
     const result = await con.query(sql, [house.address, owner, house.room, house.type, house.sqm]);
     console.log(result);
     pool.releaseConnection(con);
@@ -49,7 +49,7 @@ async function house_delete(address){
 async function house_update(house, address){
     const con = await pool.getConnection();
 
-    const sql = "update house set address=?, room=?, `square meters`=? where address=?";
+    const sql = "update house set address=?, room=?, square_meters=? where address=?";
     const result = await con.query(sql, [house.address, house.room, house.sqm, address]);
     console.log(result);
     pool.releaseConnection(con);
