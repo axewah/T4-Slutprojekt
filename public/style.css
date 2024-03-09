@@ -1,0 +1,8 @@
+
+.house{
+    border:1px solid black;
+}
+.house div{
+    
+    cursor: pointer;
+}

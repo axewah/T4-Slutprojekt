@@ -1,0 +1,13 @@
+extends template.pug 
+
+block content 
+    if houses 
+        each house in houses 
+            div(class="house" id=house.address) 
+                div
+                    h3="Address: "+house.address 
+                    p="Number of rooms: "+house.room 
+                    p="Type of house: "+house.type 
+                    p="Size: "+house.square_meters+"m^3"
+                button(hx-target="this" hx-swap="outerHTML" hx-trigger="click" hx-get="createTask") create task
+            block tasks

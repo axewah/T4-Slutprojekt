@@ -1,0 +1,9 @@
+extends template.pug 
+
+block content 
+    form(action="/house", method="post") 
+        input(type="text" name="address" placeholder="address" required)
+        input(type="number" name="room" placeholder="number of rooms" required)
+        input(type="text" name="type" placeholder="description" required)
+        input(type="number" name="sqm" placeholder="square meters" required)
+        input(type="submit" value="save")
