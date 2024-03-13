@@ -1,8 +1,8 @@
 extends template.pug 
 
 block content
-    div(class=address)
-        h2(class="clickable" hx-target="body" hx-swap="innerHTML" hx-trigger="click" hx-get="/")="House: "+ address
+    div(id=house)
+        h2(class="clickable" hx-target="body" hx-swap="innerHTML" hx-trigger="click" hx-get="/")="House: "+ house
         button(class="createBtn" hx-target="this" hx-swap="afterend" hx-trigger="click" hx-get="createTask") create task
     if tasks.length
         each task in tasks 

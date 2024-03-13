@@ -1,6 +1,6 @@
 const express = require("express");
 const db = require("./database");
-
+const uniqid = require("uniqid");
 const app = express();
 require("pug");
 app.set("view engine", "pug");
@@ -21,11 +21,11 @@ app.get("/login", (req, res)=>{
     res.render("login");
 })
 app.post("/login", async (req,res)=>{
-    console.log(await db.user(req.body.email))
+    //console.log(await db.user(req.body.email))
     
     let worker = await db.worker(req.body.email)
     let user = await db.user(req.body.email)
-    console.log(await bcrypt.compare(req.body.password.toString(), user[0].password))
+    //console.log(await bcrypt.compare(req.body.password.toString(), user[0].password))
     if(worker.length && await bcrypt.compare(req.body.password.toString(), worker[0].password)){
         req.session.user = {loggedin:true, user_name:req.body.email, user_role:"worker"}
         return res.redirect("/");
@@ -116,7 +116,7 @@ app.post("/editHouse", async (req,res)=>{
     try {
         const {oldaddress, address, room, type, sqm} = req.body;
         db.house_update({address, room, type, sqm}, oldaddress);
-        res.send({address, room, type, sqm});
+        res.render("house",{address:address, room:room, type:type, square_meters:sqm});
     } catch (error) {
         res.send(error);
     }
@@ -139,22 +139,22 @@ app.delete("/house/:address", async (req,res)=>{
 
 app.get("/createTask", (req,res)=>{res.render("createTask")});
 
-app.get("/tasks/:address", async (req,res)=>{
+app.get("/tasks/:house", async (req,res)=>{
     try {
-        const {address} = req.params;
-        console.log(address);
-        //res.send(await db.tasks(address));
-        const tasks = await db.tasks(address);
-        res.render("tasks", {tasks, address:address});
+        const {house} = req.params;
+        //console.log(house);
+        //res.send(await db.tasks(house));
+        const tasks = await db.tasks(house);
+        res.render("tasks", {tasks, house:house});
     } catch (error) {
         res.send(error);
     }
 });
 
-app.get("/task/:id/:address", async (req,res)=>{
+app.get("/task/:id/:house", async (req,res)=>{
     try {
-        const {id, address} = req.params;
-        res.send(await db.task(id, address));
+        const {id, house} = req.params;
+        res.send(await db.task(id, house));
     } catch (error) {
         res.send(error);
     }
@@ -163,19 +163,20 @@ app.get("/task/:id/:address", async (req,res)=>{
 app.post("/task", async (req,res)=>{
     try {
         const {name, desc, house, worker} = req.body;
-        await db.task_create({name, desc, worker}, house);
-        const task = {name:name,description:desc,worker:worker}
+        const id = uniqid("g");
+        await db.task_create({id, name, desc, worker}, house);
+        const task = {id:id, name:name, description:desc, house:house, worker:worker}
         res.render("task", {task})
     } catch (error) {
         res.send(error);
     }
 });
-app.get("/editTask/:id/:address", async (req,res)=>{
+app.get("/editTask/:id/:house", async (req,res)=>{
     try {
-        const {id, address} = req.params;
-        const task = await db.task(id, address);
+        const {id, house} = req.params;
+        const task = await db.task(id,house);
         
-        console.log(task[0]);
+        //console.log(task[0]);
         res.render("editTask", {task});
     } catch (error) {
         res.send(error);
@@ -183,9 +184,10 @@ app.get("/editTask/:id/:address", async (req,res)=>{
 })
 app.post("/editTask", async (req,res)=>{
     try {        
-        const {id, address, name, desc, worker} = req.body;
+        const {id, house, name, desc, worker} = req.body;
         await db.task_update({name, desc,worker}, id);
-        res.render("task", {id:id, name:name, description:desc, worker:worker, address:address})
+        const task = {id:id, name:name, description:desc, worker:worker, house:house}
+        res.render("task", {task});
     } catch (error) {
         res.send(error);
     }
@@ -226,21 +228,23 @@ app.get("/worker/:email", async (req,res)=>{
 
 app.post("/worker", async (req,res)=>{
     try {
-        const {email, password} = req.body;
-        const hash = await bcrypt.hash(password, 12);
-        await db.worker_create({email, hash}, req.session.user.user_name);
+        let {email, password} = req.body;
+        password = await bcrypt.hash(password, 12);
+        await db.worker_create({email, password}, req.session.user.user_name);
         //res.send({email, password});
-        return
+        res.render("worker", {email});
     } catch (error) {
+        console.log(error);
         res.send(error);
     }
 });
 
-app.put("/worker/:oldemail/:email/:password", async (req,res)=>{
+app.post("/editWorker", async (req,res)=>{
     try {
-        const {oldemail, email, password} = req.params;
+        const {oldemail, email, password} = req.body;
+        password = await bcrypt.hash(password, 12);
         await db.worker_update({email, password}, oldemail);
-        res.send({email, password});
+        res.render("worker", {email:email});
     } catch (error) {
         res.send(error);
     }

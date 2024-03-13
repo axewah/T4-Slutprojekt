@@ -1,6 +1,6 @@
-form(class="createForm" hx-post="/task" hx-swap="none" onsubmit="this.house.value = this.parentElement.id") 
+form(class="createForm" hx-post="/task" hx-target="this" hx-swap="afterend" onsubmit="this.house.value = this.parentElement.id") 
     input(type="text" name="name" placeholder="title" required)
     input(type="text" name="desc" placeholder="description" required)
-    input(type="text" name="worker" placeholder="optional worker")
+    input(type="email" name="worker" placeholder="optional worker")
     input(type="hidden" name="house" value="")
     input(type="submit", value="save")

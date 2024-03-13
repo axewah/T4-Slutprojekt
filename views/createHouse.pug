@@ -1,4 +1,4 @@
-form(class="createForm" hx-target="body" hx-swap="afterbegin" hx-post="/house") 
+form(class="createForm" hx-post="/house" hx-target="this" hx-swap="afterend") 
     input(type="text" name="address" placeholder="address" required)
     input(type="number" name="room" placeholder="number of rooms" required)
     input(type="text" name="type" placeholder="description" required)
