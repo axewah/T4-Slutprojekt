@@ -1,8 +1,13 @@
-
-.house{
+*{
+    box-sizing: border-box;
+}
+.hidden{
+    display: none;
+}
+.clickable{
+    cursor:pointer;
     border:1px solid black;
 }
-.house div{
-    
-    cursor: pointer;
-}
+/* .block{
+    display:block;
+} */

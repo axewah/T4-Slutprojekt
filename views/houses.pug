@@ -1,13 +1,14 @@
 extends template.pug 
 
 block content 
+    h3(class="clickable" hx-target="body" hx-trigger="click" hx-get="workers") Handle Workers
+    button(class="createBtn block" hx-target="this" hx-swap="afterend" hx-trigger="click" hx-get="createHouse") create House
     if houses 
         each house in houses 
-            div(class="house" id=house.address) 
-                div
+            div(class="clickable" id=house.address) 
+                div(hx-target="body" hx-swap="innerHTML" hx-trigger="click" hx-get="tasks/"+house.address)
                     h3="Address: "+house.address 
                     p="Number of rooms: "+house.room 
                     p="Type of house: "+house.type 
-                    p="Size: "+house.square_meters+"m^3"
-                button(hx-target="this" hx-swap="outerHTML" hx-trigger="click" hx-get="createTask") create task
-            block tasks
+                    p="Size: "+house.square_meters+"m^2"
+                

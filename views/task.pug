@@ -1,0 +1,7 @@
+div(class="clickable "+task.house id=task.id) 
+    div
+        h3="Name: "+task.name 
+        p="Description: "+task.description
+        if(task.worker)
+            p="worker: "+task.worker
+    button(class="createBtn" hx-target="this" hx-swap="afterend" hx-trigger="click" hx-get="editTask/"+task.id+"/"+task.house) edit task 

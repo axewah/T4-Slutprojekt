@@ -1,0 +1,9 @@
+extends template.pug
+
+block content 
+    h3(class="clickable" hx-target="body" hx-trigger="click" hx-get="/") Houses
+    button(class="createBtn block" hx-target="this" hx-swap="afterend" hx-trigger="click" hx-get="createWorker") create Worker
+    if workers 
+        each worker in workers 
+            div
+                p="email: "+worker.email                
