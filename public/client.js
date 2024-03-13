@@ -1,10 +1,4 @@
-/* document.querySelector("body").addEventListener("click",()=>{
-    document.querySelectorAll(".createBtn").forEach((b)=>{
-        b.addEventListener("click", (e)=>{e.target.classList.toggle("hidden")});
-        taggNewForm();
-    });
-    console.log("body")
-}) */
+
 taggNewBtn();
 function taggNewBtn(){
     document.querySelectorAll(".createBtn").forEach((b)=>{
@@ -17,7 +11,7 @@ function taggNewBtn(){
                         // Check if the added node is a form element
                         if (node instanceof HTMLFormElement) {
                             // Handle the added form element
-                            console.log('A form element has been added:', node);
+                            //console.log('A form element has been added:', node);
                             // Add event listeners or perform other actions as needed
                             taggNewForm();
                         }
@@ -29,19 +23,8 @@ function taggNewBtn(){
             const config = { childList: true/* , subtree: true  */};
     
             // Start observing the target node for configured mutations
-            observer.observe(parentElement, config);
-    
-            /* e.target.parentElement.addEventListener("change", ()=>{
-                if(e.target.parentElement.querySelector("form")){
-                    console.log("detected form");
-                    
-                }
-                else console.log("no form")
-            }) */
-             
-            
-        });
-        
+            observer.observe(parentElement, config);                
+        });        
     });
 }
 
@@ -49,7 +32,6 @@ function taggNewBtn(){
 
 function taggNewForm(){
     document.querySelectorAll(".createForm").forEach((f)=>{
-        console.log("detected form");
         // Select the parent element whose children you want to monitor
         const parentElement = document.querySelector("main");
 
@@ -62,14 +44,14 @@ function taggNewForm(){
                     //console.log('Child elements have been added or removed.');
             
                     // Perform actions as necessary
-                    //krockar med htmx som också använder submit eventet
+                                        
+                    
                     if(f.parentElement.querySelector(".hidden")){
                         f.parentElement.querySelector(".hidden").classList.toggle("hidden");
                     }
                     f.remove();
-                    console.log("removed createform")
-                }
-        
+                                       
+                }        
             });
         });
 
@@ -77,10 +59,7 @@ function taggNewForm(){
         const config = { childList: true };
 
         // Start observing the target node for configured mutations
-        observer.observe(parentElement, config);
-        
-            
-        
+        observer.observe(parentElement, config);        
     });
 }
 
@@ -90,16 +69,19 @@ const parentElement = document.querySelector("body");
 
 // Create a new MutationObserver instance
 const observer = new MutationObserver(function(mutations) {
-    mutations.forEach(function(mutation) {
+    mutations.forEach(function(mutation) {        
         if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
             // Child elements have been added
             
             //console.log('Child elements have been added or removed.');
             
             // Perform actions as necessary
-            taggNewBtn();
-        }
-        
+            mutation.addedNodes.forEach(function(node){
+                if(node instanceof HTMLElement && node.tagName.toLowerCase()==="main"){
+                    taggNewBtn();
+                }
+            })            
+        }        
     });
 });
 
