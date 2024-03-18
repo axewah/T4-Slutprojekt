@@ -112,6 +112,16 @@ app.post("/house", async (req,res)=>{
     }
 });
 
+app.get("/editHouse/:address", async (req,res)=>{
+    try {
+        const {address} = req.params;
+        house = db.house(address);
+        res.render("editHouse", {house});
+    } catch (error) {
+        res.send(error);
+    }
+});
+
 app.post("/editHouse", async (req,res)=>{
     try {
         const {oldaddress, address, room, type, sqm} = req.body;

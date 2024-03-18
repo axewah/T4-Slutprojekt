@@ -11,4 +11,4 @@ block content
                     p="Number of rooms: "+house.room 
                     p="Type of house: "+house.type 
                     p="Size: "+house.square_meters+"m^2"
-                
+                button(class="createBtn" hx-target="this" hx-swap="afterend" hx-trigger="click" hx-get="editHouse/"+house.address) edit house

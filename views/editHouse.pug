@@ -1,0 +1,9 @@
+form(class="createForm" hx-post="/house" hx-target="#"+house[0].address) 
+    input(type="hidden" name="oldaddress" value=house[0].address)
+    input(type="text" name="address" value=house[0].address placeholder="address" required)
+    input(type="number" name="room" value=house[0].room placeholder="number of rooms" required)
+    input(type="text" name="type" value=house[0].type placeholder="description" required)
+    input(type="number" name="sqm" value=house[0].square_meters placeholder="square meters" required)
+    input(type="submit" value="save")
+
+    //TAnke alla input type hidden kan bytas ut med onsubmit och då sätter värdet
