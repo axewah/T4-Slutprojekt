@@ -4,4 +4,5 @@ div(class=task.house id=task.id)
         p="Description: "+task.description
         if(task.worker)
             p="worker: "+task.worker
-    button(class="createBtn" hx-target="this" hx-swap="afterend" hx-trigger="click" hx-get="editTask/"+task.id+"/"+task.house) edit task 
+    button(class="createBtn" hx-target="this" hx-swap="afterend" hx-trigger="click" hx-get="editTask/"+task.id+"/"+task.house) edit Task
+    button(class="createBtn block" hx-target="#"+task.id hx-swap="delete" hx-trigger="click" hx-delete="task/"+task.id hx-confirm="Do you want to delete?") delete Task
