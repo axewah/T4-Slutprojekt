@@ -1,7 +1,8 @@
-div(class="clickable" id=house.address) 
+div(class="clickable" id=house.address.replaceAll(" ","")) 
     div(hx-target="body" hx-trigger="click" hx-get="tasks/"+house.address)
         h3="Address: "+house.address 
         p="Number of rooms: "+house.room 
         p="Type of house: "+house.type 
         p="Size: "+house.square_meters+"m^2"
     button(class="createBtn" hx-target="this" hx-swap="afterend" hx-trigger="click" hx-get="editHouse/"+house.address) edit house
+    button(class="createBtn block" hx-target="#"+house.address.replaceAll(" ","") hx-swap="delete" hx-trigger="click" hx-delete="house/"+house.address hx-confirm="Do you want to delete?") delete House

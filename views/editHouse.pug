@@ -1,4 +1,4 @@
-form(class="createForm" hx-post="/editHouse" hx-target="#"+house[0].address) 
+form(class="createForm" hx-post="/editHouse" hx-target="#"+house[0].address.replaceAll(" ","")) 
     input(type="hidden" name="oldaddress" value=house[0].address)
     input(type="text" name="address" value=house[0].address placeholder="address" required)
     input(type="number" name="room" value=house[0].room placeholder="number of rooms" required)
