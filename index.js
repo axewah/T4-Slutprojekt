@@ -149,7 +149,14 @@ app.delete("/house/:address", async (req,res)=>{
 
 
 
-app.get("/createTask", (req,res)=>{res.render("createTask")});
+app.get("/createTask", async (req,res)=>{
+    try {
+        const workers = await db.workers(req.session.user.user_name);
+        res.render("createTask", {workers});
+    }catch (error) {
+        res.send(error);
+    }    
+});
 
 app.get("/tasks/:house", async (req,res)=>{
     try {
@@ -187,9 +194,9 @@ app.get("/editTask/:id/:house", async (req,res)=>{
     try {
         const {id, house} = req.params;
         const task = await db.task(id,house);
-        
+        const workers = await db.workers(req.session.user.user_name);
         //console.log(task[0]);
-        res.render("editTask", {task});
+        res.render("editTask", {task, workers});
     } catch (error) {
         res.send(error);
     }

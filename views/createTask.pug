@@ -1,6 +1,11 @@
 form(class="createForm" hx-post="/task" hx-target="this" hx-swap="afterend" onsubmit="this.house.value = this.parentElement.id") 
     input(type="text" name="name" placeholder="title" required)
     input(type="text" name="desc" placeholder="description" required)
-    input(type="email" name="worker" placeholder="optional worker")
+    //input(type="email" name="worker" placeholder="optional worker")
+    select(name="worker")
+        option(value="")="No worker"
+        if(workers)
+            each worker in workers
+                option(value=worker.email)=worker.email
     input(type="hidden" name="house" value="")
     input(type="submit", value="save")
