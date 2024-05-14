@@ -105,7 +105,7 @@ async function task_create(task, house){
     const result = await con.query(sql, [task.id, task.name, task.desc, house, task.worker]);
     /* console.log(result); */
     pool.releaseConnection(con);
-    return result[0].insertId;
+    return result[0];
 }
 async function task_delete(id){
     const con = await pool.getConnection();
@@ -152,27 +152,27 @@ async function worker(email){
 async function worker_create(worker, user){
     const con = await pool.getConnection();
 
-    const sql = "INSERT INTO worker (email, password, invited_by) VALUES (?, ?, ?)";
-    const result = await con.query(sql, [worker.email, worker.password, user]);
+    const sql = "INSERT INTO worker (id, email, password, invited_by) VALUES (?, ?, ?, ?)";
+    const result = await con.query(sql, [worker.id, worker.email, worker.password, user]);
     console.log(result[0]);
     pool.releaseConnection(con);
-    return result[0].insertId;
+    return result[0];
 }
-async function worker_delete(email){
+async function worker_delete(email, user){
     const con = await pool.getConnection();
 
-    const sql = "delete from worker where email = ?";
-    const result = await con.query(sql, [email]);
+    const sql = "delete from worker where email = ? and invited_by = ?";
+    const result = await con.query(sql, [email, user]);
     /* console.log(result); */
     pool.releaseConnection(con);
     return result[0];
 }
-async function worker_update(worker, email){
+async function worker_update(worker, user){
     const con = await pool.getConnection();
 
-    const sql = "update worker set email=?, password=? where email=?";
-    const result = await con.query(sql, [worker.email, worker.password, email]);
-    /* console.log(result); */
+    const sql = "update worker set email=?, password=? where email=? and invited_by=?";
+    const result = await con.query(sql, [worker.email, worker.password, worker.email, user]);
+    console.log(result[0]); 
     pool.releaseConnection(con);
     return result[0];
 }

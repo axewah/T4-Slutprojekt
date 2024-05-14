@@ -196,7 +196,7 @@ app.post("/editTask", async (req,res)=>{
     try {        
         const {id, house, name, desc, worker} = req.body;
         await db.task_update({name, desc,worker}, id);
-        const task = {id:id, name:name, description:desc, worker:worker, house:house}
+        const task = {id, name, description:desc, worker, house}
         res.render("task", {task});
     } catch (error) {
         res.send(error);
@@ -216,7 +216,9 @@ app.delete("/task/:id", async (req,res)=>{
 
 
 
-app.get("/createWorker", (req, res)=>{res.render("createWorker");});
+app.get("/createWorker", (req, res)=>{
+    res.render("createWorker");
+});
 
 app.get("/workers", async (req,res)=>{
     try {
@@ -239,22 +241,34 @@ app.get("/worker/:email", async (req,res)=>{
 app.post("/worker", async (req,res)=>{
     try {
         let {email, password} = req.body;
+        const id = uniqid("g");
         password = await bcrypt.hash(password, 12);
-        await db.worker_create({email, password}, req.session.user.user_name);
+        await db.worker_create({id, email, password}, req.session.user.user_name);
         //res.send({email, password});
-        res.render("worker", {email});
+        res.render("worker", {email, id});
     } catch (error) {
         console.log(error);
         res.send(error);
     }
 });
 
+app.get("/editWorker/:email", async (req,res)=>{
+    try {
+        const {email} = req.params;
+        
+        //console.log(task[0]);
+        res.render("editWorker", {email});
+    } catch (error) {
+        res.send(error);
+    }
+}); 
+
 app.post("/editWorker", async (req,res)=>{
     try {
-        const {oldemail, email, password} = req.body;
+        let {email, password} = req.body;
         password = await bcrypt.hash(password, 12);
-        await db.worker_update({email, password}, oldemail);
-        res.render("worker", {email:email});
+        await db.worker_update({email, password}, req.session.user.user_name);
+        //res.render("worker", {email});
     } catch (error) {
         res.send(error);
     }
@@ -263,7 +277,7 @@ app.post("/editWorker", async (req,res)=>{
 app.delete("/worker/:email", async (req,res)=>{
     try {
         const {email} = req.params;
-        await db.worker_delete(email);
+        await db.worker_delete(email, req.session.user.user_name);
         res.sendStatus(200);
     } catch (error) {
         res.send(error);
