@@ -115,7 +115,8 @@ app.post("/house", async (req,res)=>{
 app.get("/editHouse/:address", async (req,res)=>{
     try {
         const {address} = req.params;
-        house = db.house(address);
+        const house = await db.house(address, req.session.user.user_name);
+        console.log(house);
         res.render("editHouse", {house});
     } catch (error) {
         res.send(error);
@@ -126,7 +127,8 @@ app.post("/editHouse", async (req,res)=>{
     try {
         const {oldaddress, address, room, type, sqm} = req.body;
         db.house_update({address, room, type, sqm}, oldaddress);
-        res.render("house",{address:address, room:room, type:type, square_meters:sqm});
+        const house = {address:address, room:room, type:type, square_meters:sqm}
+        res.render("house",{house});
     } catch (error) {
         res.send(error);
     }
