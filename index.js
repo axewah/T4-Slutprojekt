@@ -170,10 +170,10 @@ app.get("/tasks/:house", async (req,res)=>{
     }
 });
 
-app.get("/task/:id/:house", async (req,res)=>{
+app.get("/task/:id/", async (req,res)=>{
     try {
-        const {id, house} = req.params;
-        res.send(await db.task(id, house));
+        const {id} = req.params;
+        res.send(await db.task(id));
     } catch (error) {
         res.send(error);
     }
@@ -190,10 +190,10 @@ app.post("/task", async (req,res)=>{
         res.send(error);
     }
 });
-app.get("/editTask/:id/:house", async (req,res)=>{
+app.get("/editTask/:id", async (req,res)=>{
     try {
-        const {id, house} = req.params;
-        const task = await db.task(id,house);
+        const {id} = req.params;
+        const task = await db.task(id);
         const workers = await db.workers(req.session.user.user_name);
         //console.log(task[0]);
         res.render("editTask", {task, workers});
@@ -203,13 +203,25 @@ app.get("/editTask/:id/:house", async (req,res)=>{
 })
 app.post("/editTask", async (req,res)=>{
     try {        
-        const {id, house, name, desc, worker} = req.body;
-        await db.task_update({name, desc,worker}, id);
-        const task = {id, name, description:desc, worker, house}
+        const {id, house, name, desc, worker, status} = req.body;
+        await db.task_update({name, desc, worker, status}, id);
+        const task = {id, name, description:desc, worker, house, status};
         res.render("task", {task});
     } catch (error) {
         res.send(error);
     }
+});
+
+app.get("/editTaskStatus/:id/:status", (req,res)=>{
+    const {id, status} = req.params;
+    res.render("editTaskStatus", {id, status});
+});
+
+app.post("/editTaskStatus", async (req, res)=>{
+    const {id, status} = req.body;
+    await db.taskStatus_update(id, status);
+    task = await db.task(id);
+    res.render("task", {task})
 });
 
 app.delete("/task/:id", async (req,res)=>{

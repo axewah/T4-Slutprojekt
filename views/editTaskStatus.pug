@@ -1,0 +1,7 @@
+form(class="createForm" hx-post="/editTask" hx-target="#"+id)
+    select(name="status")
+        option(value=0)="Waiting"
+        option(value=1)="In progress"
+        option(value=2)="Finished"
+    input(type="hidden", name="id" value=id)
+    input(type="submit", value="Change")

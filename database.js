@@ -10,7 +10,7 @@ const pool = mysql.createPool({
 
 module.exports = { user, user_create,
     house, houses, house_create, house_delete, house_update,
-    task, tasks, task_create, task_delete, task_update, 
+    task, tasks, task_create, task_delete, task_update, taskStatus_update,
     worker, workers, worker_create, worker_delete, worker_update
 };
 
@@ -89,11 +89,11 @@ async function tasks(house){
     pool.releaseConnection(con);
     return result[0];
 }
-async function task(id, house){
+async function task(id){
     const con = await pool.getConnection();
 
-    const sql = "select * from task where id=? and house=?";
-    const result = await con.query(sql, [id, house]);
+    const sql = "select * from task where id=?";
+    const result = await con.query(sql, [id]);
     /* console.log(result); */
     pool.releaseConnection(con);
     return result[0];
@@ -119,8 +119,17 @@ async function task_delete(id){
 async function task_update(task, id){
     const con = await pool.getConnection();
 
-    const sql = "update task set name=?, description=?, worker=? where id=?";
-    const result = await con.query(sql, [task.name, task.desc, task.worker, id]);
+    const sql = "update task set name=?, description=?, status=?, worker=? where id=?";
+    const result = await con.query(sql, [task.name, task.desc, task.status, task.worker, id]);
+    /* console.log(result); */
+    pool.releaseConnection(con);
+    return result[0];
+}
+async function taskStatus_update(id, status){
+    const con = await pool.getConnection();
+
+    const sql = "update task set status=? where id=?";
+    const result = await con.query(sql, [status, id]);
     /* console.log(result); */
     pool.releaseConnection(con);
     return result[0];
